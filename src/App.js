@@ -9,12 +9,9 @@ function App() {
     if (toDo == "") {
       return;
     }
+    // setToDos((currentArray) => [toDo, ...currentArray]);
+    setToDos((currentArray) => [...currentArray, toDo]); // current list apears first and a new element will add at the last of array
     setToDo("");
-    setToDos((currentArray) => [toDo, ...currentArray]);
-    // add examples in list ->
-    // li=[1,2,3,4]
-    // [6,li] -> return [6, array(4)]
-    // [6,...li] -> return [6,1,2,3,4)]
   };
   console.log(toDos);
   return (
@@ -29,6 +26,15 @@ function App() {
         />
         <button>Add To Do</button>
       </form>
+      <hr />
+      <ul>
+        {toDos.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+      {/* map allows me to transform the items in a array into whatever i want 
+      and it will ruturn with new array 
+      [a,b,c,d].map((item) => item.toUpperCase()) = [A,B,C,D] */}
     </div>
   );
 }
