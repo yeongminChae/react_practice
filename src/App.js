@@ -1,71 +1,45 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
-  const [amount, setAmount] = useState();
-  const [inverted, setInverted] = useState(false);
-  const [index, setIndex] = useState();
-  const reset = () => setAmount(0);
-  const onChange = (event) => {
-    setAmount(event.target.value);
-  };
-  const flipped = () => {
-    setInverted((current) => !inverted);
-    reset();
-  };
-  const onSelect = (event) => {
-    return setIndex(event.target.value);
+  const [movies, setMovies] = useState([]);
+  const getMovies = async () => {
+    const json = await (
+      await fetch(
+        `https://yts.mx/api/v2/list_movies.json?minimum_rating=8.8&sort_by=year`
+      )
+    ).json();
+    setMovies(json.data.movies);
+    setLoading(false);
   };
   useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers?limit=10")
-      .then((response) => response.json())
-      .then((json) => {
-        setCoins(json);
-        setLoading(false);
-      });
+    getMovies();
   }, []);
+
+  console.log(movies);
   return (
     <div>
-      <h1>The Coins! {loading ? "" : `(${coins.length})`} </h1>
-      <label>Choose the coins : </label>
       {loading ? (
-        <strong>Loading...</strong>
+        <h1>loading... </h1>
       ) : (
-        <select onChange={onSelect} value={index}>
-          {coins.map((coin) => (
-            <option key={coin.id}>
-              {coin.name} ({coin.symbol}: ${coin.quotes.USD.price} USD)
-            </option>
+        <div>
+          {movies.map((movie) => (
+            <div key={movies.id}>
+              <img src={movie.medium_cover_image} />
+              <h2> {movie.title}</h2>
+              <p>{movies.summary}</p>
+              {movie.hasOwnProperty("genres") ? (
+                <ul>
+                  {" "}
+                  {movie.genres.map((g) => (
+                    <li key={g}>{g} </li>
+                  ))}{" "}
+                </ul>
+              ) : null}
+            </div>
           ))}
-        </select>
+        </div>
       )}
-      <hr />
-      <div>
-        <label>USD($) : </label>
-        <input
-          onChange={onChange}
-          value={inverted ? amount * 29269.9871 : amount}
-          placeholder="Amount of USD$"
-          type="number"
-          disabled={inverted}
-        />
-      </div>
-      <div>
-        <label>
-          {/* {coins.map((coin) => ())} */}
-          Bitcoin
-        </label>
-        <input
-          onChange={onChange}
-          value={inverted ? amount : amount / 29269.9871}
-          placeholder="Amount of Coin"
-          type="number"
-          disabled={!inverted}
-        />
-      </div>
-      <button onClick={reset}>Reset</button>
-      <button onClick={flipped}>{inverted ? "Turn Back" : "inverted"}</button>
     </div>
   );
 }
