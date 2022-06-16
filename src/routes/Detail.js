@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+// useParams is giving us to value of the variable in our url which is changing
+
 function Detail() {
   const { id } = useParams();
   const getMovie = async () => {

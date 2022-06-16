@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+// link is the component that is going to move the user to one page to others without refresting
 
 function Movie({ id, coverImg, title, summary, genres }) {
   return (

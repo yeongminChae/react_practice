@@ -6,6 +6,7 @@ function App() {
   return (
     <Router>
       <Switch>
+        {/* switch is looking for route which is the url and it components the url */}
         <Route path="/movie/:id">
           <Detail />
         </Route>
